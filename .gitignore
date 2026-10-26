@@ -20,3 +20,5 @@ models/
 Thumbs.db
 
 docker-compose.override.yml
+
+docs/extraction_tests/
