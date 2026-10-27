@@ -14,7 +14,7 @@ def _flags(lines):
     flags = []
     for i, line in enumerate(lines):
         t = " | " in line
-        if not t and 0 < i < n - 1 and len(line) < 80 and " | " in lines[i - 1] and " | " in lines[i + 1]:
+        if (not t and 0 < i < n - 1 and len(line) < 80 and not line.isupper() and " | " in lines[i - 1] and " | " in lines[i + 1]):
             t = True
         flags.append(t)
     return flags
@@ -38,19 +38,41 @@ def _runs(lines, flags):
             merged.append(r)
     return merged
 
+LABEL_RE = re.compile(r"[A-Za-z]{3,}|^(19|20)\d{2}$")
+
+
+def is_low_quality(text, min_ratio=0.5):
+    lines = [l for l in text.split("\n") if l.strip()]
+    labeled = sum(1 for l in lines if LABEL_RE.search(l.split(" | ")[0].strip()))
+    return labeled / max(1, len(lines)) < min_ratio
+
 
 def _caption(prev_lines):
     """Short title lines just above a table (copied, not moved)."""
     cap = []
     for line in reversed(prev_lines[-CAPTION_LINES:]):
-        if len(line) < 80 and not line.rstrip().endswith((".", ",", ";")):
+        if len(line) < 80 and re.search(r"[A-Za-z]{3,}", line) and not line.rstrip().endswith((".", ",", ";")):
             cap.insert(0, line)
         else:
             break
     return cap
 
 
+def _join_wrapped(rows):
+    out, pending = [], ""
+    for r in rows:
+        if " | " not in r:
+            pending = (pending + " " + r).strip()
+        else:
+            out.append((pending + " " + r).strip() if pending else r)
+            pending = ""
+    if pending:
+        out.append(pending)
+    return out
+
+
 def _table_chunks(caption, rows):
+    rows = _join_wrapped(rows)
     header = rows[0] if HEADER_RE.search(rows[0]) else None
     body = rows[1:] if header else rows
     if not body:

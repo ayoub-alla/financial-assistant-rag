@@ -7,7 +7,7 @@ from pathlib import Path
 import fitz
 
 sys.path.insert(0, ".")
-from src.chunking import chunk_page
+from src.chunking import chunk_page, is_low_quality
 from src.extract import extract_page, find_boilerplate
 
 PDF_DIR = Path("data/pdfs")
@@ -28,7 +28,7 @@ def main():
 
             doc = fitz.open(pdf)
             boilerplate = find_boilerplate(doc)
-            kinds, empty = Counter(), []
+            kinds, empty, low = Counter(), [], 0
             for p in range(1, len(doc) + 1):
                 page = extract_page(doc, p, boilerplate)
                 if page["empty"]:
@@ -47,6 +47,8 @@ def main():
                         "page": p,
                         "source_file": pdf.name,
                     }
+                    rec["low_quality"] = is_low_quality(ch["text"])
+                    low += rec["low_quality"]
                     f.write(json.dumps(rec, ensure_ascii=False) + "\n")
                     kinds[ch["type"]] += 1
                     lengths.append(len(ch["text"]))
