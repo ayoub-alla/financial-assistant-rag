@@ -38,14 +38,23 @@ def _runs(lines, flags):
             merged.append(r)
     return merged
 
-LABEL_RE = re.compile(r"[A-Za-z]{3,}|^(19|20)\d{2}$")
+
+def _letters(s):
+    return sum(c.isalpha() for c in s)
+
+
+def _has_label(line):
+    cells = [c.strip() for c in line.split(" | ")]
+    first = cells[0]
+    if _letters(first) >= 2 or re.fullmatch(r"(19|20)\d{2}", first):
+        return True
+    # bullet or section number in the first cell, label in the second
+    return len(first) <= 4 and len(cells) > 1 and _letters(cells[1]) >= 3
 
 
 def is_low_quality(text, min_ratio=0.5):
     lines = [l for l in text.split("\n") if l.strip()]
-    labeled = sum(1 for l in lines if LABEL_RE.search(l.split(" | ")[0].strip()))
-    return labeled / max(1, len(lines)) < min_ratio
-
+    return sum(map(_has_label, lines)) / max(1, len(lines)) < min_ratio
 
 def _caption(prev_lines):
     """Short title lines just above a table (copied, not moved)."""
