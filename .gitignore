@@ -24,3 +24,5 @@ docker-compose.override.yml
 scripts/
 docs/extraction_tests/
 data/chunks.jsonl
+
+tests/
