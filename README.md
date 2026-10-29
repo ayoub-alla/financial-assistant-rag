@@ -11,8 +11,8 @@ A bilingual **retrieval-augmented generation (RAG)** assistant that answers ques
 
 **Scope:** Document-grounded financial information, **not** investment advice. If the available reports do not support an answer, the assistant is instructed to say so.
 
-![Chat interface](docs/app.png)
-![Chat interface](docs/ask.png)
+![Chat interface](docs/app.PNG)
+![Chat interface](docs/ask.PNG)
 
 ## Features
 
