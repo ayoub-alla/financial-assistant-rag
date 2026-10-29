@@ -1,0 +1,51 @@
+[
+  {"id": 1, "type": "number", "question": "What were Maroc Telecom's total assets at the end of 2025?",
+   "expected": "MAD 75,811 million", "must_contain": ["75,811"],
+   "source": [["iam_2025_annual.pdf", 23]], "verified": true
+  },
+
+  {"id": 2, "type": "number", "question": "What was Maroc Telecom's net cash from operating activities in 2025?",
+   "expected": "MAD 18,499 million", "must_contain": ["18,499"],
+   "source": [["iam_2025_annual.pdf", 25]], "verified": true},
+
+  {"id": 3, "type": "cross-year", "question": "How did Maroc Telecom's net earnings change between 2024 and 2025?",
+   "expected": "From MAD 1,801 million (2024) to MAD 6,968 million (2025), about 3.9 times higher",
+   "must_contain": ["1,801", "6,968"],
+   "source": [["iam_2025_annual.pdf", 23]], "verified": true},
+
+  {"id": 4, "type": "number-french", "question": "Quel a été le résultat net de Wafasalaf en 2024 ?",
+   "expected": "353 millions de MAD, en hausse de 15,2 % par rapport à 306 millions en 2023",
+   "must_contain": ["353"],
+   "source": [["attijariwafa_2024_annual.pdf", 21]], "verified": true },
+
+  {"id": 5, "type": "number", "question": "What dividend per share did Attijariwafa bank's Board propose for 2024?",
+   "expected": "MAD 16.50 per share (total payout MAD 4,087,675,941)",
+   "must_contain": ["16.50"],
+   "source": [["attijariwafa_2024_annual.pdf", 21]], "verified": true},
+
+  {"id": 6, "type": "number", "question": "How much solid bulk traffic did Marsa Maroc handle in 2024, and how did it change?",
+   "expected": "18.8 million tons vs 17.4 million in 2023 (+8%). Trap: 21.7 Mt is solid bulk AND general cargo",
+   "must_contain": ["18.8", "17.4"],
+   "source": [["marsa_2024_annual.pdf", 19]], "verified": true},
+
+  {"id": 7, "type": "text", "question": "Which products dominated Marsa Maroc's solid bulk traffic in 2024?",
+   "expected": "Animal feed and cereals (22%), then coal and petroleum coke (14%), gypsum (11%), sugar (10%)",
+   "must_contain": ["animal feed", "cereals", "coal"],
+   "source": [["marsa_2024_annual.pdf", 19]], "verified": true},
+
+  {"id": 8, "type": "text", "question": "What dispute affected Maroc Telecom's other operating income and expenses in 2024, and for what amount?",
+   "expected": "The dispute with operator Wana Corporate, MAD 6.4 billion (2025 benefited from a MAD 2 billion retrocession)",
+   "must_contain": ["Wana", "6.4"],
+   "source": [["iam_2025_annual.pdf", 24]], "verified": true },
+
+  {"id": 9, "type": "cross-year-two-reports", "question": "How did Attijariwafa's consolidated net income (group share) change between 2023 and 2024?",
+   "expected": "TO FILL. 2023: MAD 7.5 billion (+23.0%), seen in the 2023 report p.32, confirm. 2024: look up in the 2024 report",
+   "must_contain": [],
+   "source": [["attijariwafa_2023_annual.pdf", 32], ["attijariwafa_2024_annual.pdf", 89]], "verified": true },
+
+  {"id": 10, "type": "unanswerable", "question": "What is Marsa Maroc's dividend forecast for 2030?",
+   "expected": "I don't know (the reports contain no such forecast)",
+   "must_contain": [], "expect_idk": true, "source": [], "verified": true,
+   "gemini_answer" : "Je ne sais pas d'après les documents disponibles."
+  }
+]

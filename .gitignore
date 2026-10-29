@@ -21,9 +21,8 @@ Thumbs.db
 
 docker-compose.override.yml
 
-scripts/
+scripts/checkpoint.py
 docs/extraction_tests/
 data/chunks.jsonl
 
-tests/
 results/
