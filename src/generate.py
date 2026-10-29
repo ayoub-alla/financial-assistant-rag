@@ -38,6 +38,20 @@ def _model_chain():
     return [n for n in (os.getenv(k, "").strip() for k in keys) if n]
 
 
+def format_citations(text, hits):
+    def replace(match):
+        pages = []
+        for n in map(int, re.findall(r"\d+", match.group(1))):
+            if 1 <= n <= len(hits):
+                h = hits[n - 1]
+                label = f"{h['company_name']} {h['year']}, p.{h['page']}"
+                if label not in pages:
+                    pages.append(label)
+        return "(" + "; ".join(pages) + ")" if pages else match.group(0)
+
+    return re.sub(r"\[([\d,\s]+)\]", replace, text)
+
+
 def _generate(prompt):
     chain = _model_chain()
     if not chain:
@@ -56,7 +70,7 @@ def _generate(prompt):
                 return resp.text.strip(), name
             log.append(f"{name}: empty response")
         except Exception as e:
-            if getattr(e, "code", None) == 404:
+            if getattr(e, "code", None) == 404 or getattr(e, "code", None) == 503 :
                 _dead.add(name)
             log.append(f"{name}: {type(e).__name__}: {str(e)[:150]}")
     raise RuntimeError("All Gemini models failed:\n" + ("\n".join(log) or "all models marked unavailable"))
@@ -84,4 +98,9 @@ def answer(question, k=TOP_K, **filters):
             if key not in seen:
                 seen.add(key)
                 sources.append({k_: h[k_] for k_ in ("company_name", "year", "doc_type", "source_file", "page")})
-    return {"answer": text, "sources": sources, "hits": hits, "model": model_used}
+    return {
+      "answer": format_citations(text, hits),
+      "sources": sources,
+      "hits": hits,
+      "model": model_used
+    }
