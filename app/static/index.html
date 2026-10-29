@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#f8f9fb" />
+  <title>Atlas - Financial Reports Assistant</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;450;500;550;600;650;700&display=swap" rel="stylesheet" />
+  <style>
+    :root{font-family:'DM Sans',Inter,ui-sans-serif,system-ui,sans-serif;color:#202a37;background:#f8f9fb;font-synthesis:none}
+    *{box-sizing:border-box}body{margin:0;min-height:100dvh}button,textarea{font:inherit}button{cursor:pointer}
+    .layout{min-height:100dvh;display:flex;flex-direction:column;align-items:center}
+    header{height:75px;width:100%;border-bottom:1px solid #e9edf2;background:rgba(255,255,255,.78);backdrop-filter:blur(14px);display:flex;align-items:center;justify-content:space-between;padding:0 clamp(20px,4.5vw,70px)}
+    .brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.5px;font-size:18px;color:#182b36}
+    .mark{height:35px;width:35px;display:grid;place-items:center;border-radius:11px;background:#194e8d;color:white;font-size:21px;font-weight:700}
+    .header-right{display:flex;align-items:center;gap:18px}.label{font-size:12px;color:#82909b;font-weight:600;letter-spacing:.07em;text-transform:uppercase}
+    .new-chat{border:1px solid #e2e8ee;border-radius:10px;background:white;color:#4e6070;font-weight:600;font-size:12px;padding:10px 13px;transition:.2s}.new-chat:hover{border-color:#cde5f8;color:#183b49}
+    main{width:min(100%,840px);flex:1;display:flex;flex-direction:column;padding:0 24px}
+    .conversation{flex:1;min-height:250px;display:flex;flex-direction:column;gap:30px;padding:36px 0 24px}
+    .hero{margin:auto;text-align:center;padding:60px 0 75px;max-width:600px;animation:arrive .35s ease}
+    .hero-icon{height:56px;width:56px;display:grid;place-items:center;margin:0 auto 25px;border-radius:19px;background:#d1e5fd;color:#194e8d}
+    h1{font-size:clamp(27px,4vw,36px);letter-spacing:-1.4px;margin:0 0 11px;font-weight:650;color:#1c3039}
+    .hero p{color:#7d8a98;font-size:16px;line-height:1.75;margin:0 auto 26px;max-width:445px}
+    .suggestions{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}.suggestion{background:#fff;border:1px solid #e6ebef;color:#536474;border-radius:999px;padding:10px 14px;font-size:14px;transition:.2s}.suggestion:hover{border-color:#789ac4;color:#194e8d;background:#d1e5fd}
+    .message{animation:arrive .28s ease}.role{font-size:11px;color:#8d9ba8;font-weight:700;text-transform:uppercase;letter-spacing:.1em;margin:0 0 14px}
+    .user-message{align-self:flex-end;max-width:min(85%,630px);padding:15px 19px;border:1px solid #d1e5fd;background:#d1e5fd;border-radius:17px 17px 5px 17px;white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.65;font-size:16px}
+    .assistant-message{max-width:100%}.answer{font-size:16px;line-height:1.9;color:#344454;overflow-wrap:anywhere}.answer p{margin:0 0 14px}.answer strong{color:#1f3440;font-weight:700}.answer h1,.answer h2,.answer h3{color:#1f3440;letter-spacing:-.03em;margin:22px 0 10px;font-size:19px}.answer ul,.answer ol{padding-left:23px;margin:8px 0 14px}.answer li{padding-left:4px;margin:5px 0}.answer table{border-collapse:collapse;width:100%;margin:12px 0;display:block;overflow-x:auto;font-size:16px}.answer td,.answer th{border:1px solid #e4e9ee;padding:9px 11px}.answer th{background:#f0f4f5}.answer code{background:#edf1f3;padding:2px 5px;border-radius:4px}
+    .source-heading{display:flex;gap:8px;align-items:center;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:#8996a2;margin:24px 0 12px}
+    .sources{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,230px),1fr));gap:10px}.source{min-width:0;display:flex;align-items:center;gap:11px;text-decoration:none;background:#fff;border:1px solid #e5eaef;border-radius:13px;padding:13px;transition:.18s}.source:hover{border-color:#194e8d;transform:translateY(-1px);box-shadow:0 7px 18px #2449380c}
+    .pdf-icon{flex:0 0 38px;height:42px;border-radius:9px;background:#fff0ec;color:#c05a48;display:grid;place-items:center}.source-text{flex:1;min-width:0}.source-name{font-size:12px;color:#344758;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.source-meta{font-size:11px;color:#98a3ac;margin-top:4px}.source-arrow{color:#9caab3}
+    .status{display:flex;gap:12px;align-items:center;color:#8695a3;font-size:13px}.dots{display:flex;gap:5px}.dots i{display:block;height:6px;width:6px;border-radius:50%;background:#49607c;animation:bounce 1.2s infinite}.dots i:nth-child(2){animation-delay:.17s}.dots i:nth-child(3){animation-delay:.34s}
+    .composer-area{position:sticky;bottom:0;padding:20px 0 21px;background:linear-gradient(0deg,#f8f9fb 78%,#f8f9fb00)}
+    form{background:white;border:1px solid #dce5ea;border-radius:18px;box-shadow:0 5px 25px #1e3f4b0c;display:flex;align-items:flex-end;padding:10px 10px 10px 19px;gap:9px;transition:border-color .2s,box-shadow .2s}form:focus-within{border-color:#d1e5fd;box-shadow:0 3px 22px #2c746015}
+    textarea{border:0;outline:none;resize:none;line-height:1.55;font-size:14px;color:#233746;flex:1;background:none;min-height:36px;max-height:150px;overflow-y:auto;padding:7px 0;min-width:0}textarea::placeholder{color:#a0adb7}
+    .send{flex:0 0 39px;height:39px;display:grid;place-items:center;border:0;border-radius:11px;background:#194e8d;color:white;transition:.2s}.send:hover:not(:disabled){background:#13335a;transform:translateY(-1px)}.send:disabled{background:#d1e5fd;cursor:default}
+    .footnote{text-align:center;margin:11px 0 0;font-size:10.5px;color:#a2acb7;letter-spacing:.01em}
+    @keyframes bounce{0%,65%,100%{transform:translateY(0);opacity:.5}32%{transform:translateY(-5px);opacity:1}}@keyframes arrive{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:translateY(0)}}
+    @media(max-width:620px){header{height:65px;padding:0 18px}.label{display:none}main{padding:0 16px}.conversation{padding-top:25px;gap:25px}.hero{padding:50px 0}.hero p{font-size:14px}.sources{grid-template-columns:1fr}.composer-area{padding:14px 0 13px}.user-message{max-width:95%}}
+    @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+<div class="layout">
+  <header>
+    <div class="brand"><div class="mark">A</div> Atlas </div>
+    <div class="header-right"><button type="button" class="new-chat" id="clear">New chat</button></div>
+  </header>
+  <main>
+    <section id="conversation" class="conversation" aria-live="polite">
+      <div class="hero" id="hero">
+        <div class="hero-icon"><svg width="29" height="29" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8l-5-5H8Z"/><path d="M14 3v5h7M7 13h10M7 17h7"/></svg></div>
+        <h1>Explore financial reports.</h1>
+        <p>Ask about financial results, strategy, or governance from publicly available Moroccan company reports.</p>
+        <div class="suggestions">
+          <button type="button" class="suggestion">Compare Attijariwafa Bank's net income in 2023 and 2024</button>
+          <button type="button" class="suggestion">What was Maroc Telecom's total assets in 2025?</button>
+          <button type="button" class="suggestion">Résumez le trafic de Marsa Maroc en 2024</button>
+        </div>
+      </div>
+    </section>
+    <div class="composer-area">
+      <form id="ask-form">
+        <textarea id="prompt" rows="1" maxlength="4000" placeholder="Ask a question about financial reports…" aria-label="Your question" required></textarea>
+        <button id="send" class="send" type="submit" aria-label="Send question" disabled><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m5 12 7-7 7 7M12 19V5"/></svg></button>
+      </form>
+      <p class="footnote">Answers are based only on uploaded reports · Not investment advice</p>
+    </div>
+  </main>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/marked@15.0.12/marked.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/dompurify@3.2.6/dist/purify.min.js"></script>
+<script>
+  const conversation = document.getElementById('conversation');
+  const form = document.getElementById('ask-form');
+  const promptBox = document.getElementById('prompt');
+  const send = document.getElementById('send');
+  let busy = false;
+  const pdfSvg = '<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M8 14h8M8 18h5"/></svg>';
+  function scrollBottom() { requestAnimationFrame(() => window.scrollTo({top:document.body.scrollHeight,behavior:'smooth'})); }
+  function resize() { promptBox.style.height = 'auto'; promptBox.style.height = Math.min(promptBox.scrollHeight, 150) + 'px'; send.disabled = busy || !promptBox.value.trim(); }
+  promptBox.addEventListener('input', resize);
+  promptBox.addEventListener('keydown', e => {if(e.key === 'Enter' && !e.shiftKey && !e.isComposing){e.preventDefault();if(!send.disabled)form.requestSubmit();}});
+  function create(tag, klass, content) {const el=document.createElement(tag);if(klass)el.className=klass;if(content!==undefined)el.textContent=content;return el;}
+  function linkFor(s) {
+    // Filename is encoded separately from the PDF fragment (which navigates to a page).
+    const file=String(s.source_file||'').split(/[\\/]/).pop();
+    if(!file || !file.toLowerCase().endsWith('.pdf'))return null;
+    const page=Math.max(1,Number.parseInt(s.page,10)||1);
+    return '/pdfs/'+encodeURIComponent(file)+'#page='+page;
+  }
+  function addUser(question) {const el=create('div','message user-message',question);conversation.append(el);scrollBottom();}
+  function addLoading() {
+    const el=create('div','message assistant-message');
+    el.innerHTML='<div class="role">Atlas</div><div class="status"><span class="dots"><i></i><i></i><i></i></span>Reading reports and preparing an answer…</div>';
+    conversation.append(el);scrollBottom();return el;
+  }
+  function renderAnswer(el,data) {
+    el.replaceChildren(create('div','role','Atlas'));
+    const body=create('div','answer');
+    if(window.marked && window.DOMPurify){
+      const rendered=marked.parse(String(data.answer||''),{breaks:true,gfm:true});
+      body.innerHTML=DOMPurify.sanitize(rendered);
+      for(const a of body.querySelectorAll('a')){a.removeAttribute('href');}
+    } else {body.textContent=data.answer||'';body.style.whiteSpace='pre-wrap';}
+    el.append(body);
+    const sources=Array.isArray(data.sources)?data.sources:[];
+    if(sources.length){
+      const heading=create('div','source-heading','Sources · '+sources.length+' PDF page'+(sources.length!==1?'s':''));el.append(heading);
+      const grid=create('div','sources');
+      for(const s of sources){
+        const href=linkFor(s);const a=create(href?'a':'div','source');
+        if(href){a.href=href;a.target='_blank';a.rel='noopener noreferrer';a.title='Open the cited page in a new tab';}
+        const icon=create('span','pdf-icon');icon.innerHTML=pdfSvg;a.append(icon);
+        const info=create('span','source-text');
+        info.append(create('div','source-name',String(s.company_name||'Annual report')+' · '+String(s.year||'')));
+        info.append(create('div','source-meta',String(s.doc_type||'Annual')+' report · Page '+String(s.page||'?')));
+        a.append(info);a.append(create('span','source-arrow','↗'));grid.append(a);
+      }
+      el.append(grid);
+    }
+    scrollBottom();
+  }
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();const question=promptBox.value.trim();if(!question||busy)return;
+    busy=true;send.disabled=true;
+    document.getElementById('hero')?.remove();addUser(question);promptBox.value='';resize();const loading=addLoading();
+    try {
+      const response=await fetch('/ask',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({question})});
+      if(!response.ok)throw new Error('Request failed ('+response.status+'). Please try again.');
+      renderAnswer(loading,await response.json());
+    }catch(err){loading.replaceChildren(create('div','role','Atlas'),create('div','answer',err.message||'Unable to answer right now.'));}
+    finally{busy=false;resize();promptBox.focus();scrollBottom();}
+  });
+  document.querySelectorAll('.suggestion').forEach(btn=>btn.addEventListener('click',()=>{promptBox.value=btn.textContent;resize();promptBox.focus();form.requestSubmit();}));
+  document.getElementById('clear').addEventListener('click',()=>{if(busy)return;location.reload();});
+  resize();
+</script>
+</body>
+</html>
